@@ -5,10 +5,12 @@ from pathlib import Path
 
 
 WEIGHTS = {
-    "readme": 25,
-    "license": 25,
-    "tests": 25,
-    "ci": 25,
+    "readme": 20,
+    "license": 20,
+    "tests": 20,
+    "ci": 20,
+    "gitignore": 10,
+    "contributing": 10,
 }
 
 
@@ -16,6 +18,7 @@ WEIGHTS = {
 class RepoHealthReport:
     path: str
     score: int
+    max_score: int
     checks: dict[str, bool]
     missing: list[str]
 
@@ -23,6 +26,7 @@ class RepoHealthReport:
         return {
             "path": self.path,
             "score": self.score,
+            "max_score": self.max_score,
             "checks": self.checks,
             "missing": self.missing,
         }
@@ -52,7 +56,15 @@ def analyze_repo(target: str | Path) -> RepoHealthReport:
                 "azure-pipelines.yml",
             )
         ),
+        "gitignore": (root / ".gitignore").exists(),
+        "contributing": _has_any(root, ("CONTRIBUTING", "CONTRIBUTING.*", "contributing", "contributing.*")),
     }
     score = sum(WEIGHTS[name] for name, passed in checks.items() if passed)
     missing = [name for name, passed in checks.items() if not passed]
-    return RepoHealthReport(path=str(root), score=score, checks=checks, missing=missing)
+    return RepoHealthReport(
+        path=str(root),
+        score=score,
+        max_score=sum(WEIGHTS.values()),
+        checks=checks,
+        missing=missing,
+    )
