@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=63"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "repo-health-cli"
+version = "0.1.0"
+description = "Score the basic health of a Git repository."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Gyeongtae Im", email = "77048349+darkwingduck-code@users.noreply.github.com" }
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.4.0",
+]
+
+[project.scripts]
+repo-health = "repo_health_cli.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
