@@ -10,6 +10,8 @@ Small Python CLI that scores the basic health of a Git repository.
 - CI workflow presence
 - `.gitignore` presence
 - `CONTRIBUTING` presence
+- project manifest presence
+- `SECURITY` presence
 
 ## Quick start
 
@@ -30,24 +32,33 @@ repo-health . --json
 repo-health --schema
 ```
 
+```bash
+repo-health . --output reports/health.json
+```
+
 Example output:
 
 ```json
 {
   "path": "C:\\project",
-  "score": 70,
+  "score": 65,
   "max_score": 100,
+  "passed_checks": 5,
+  "total_checks": 8,
   "checks": {
     "readme": true,
     "license": true,
     "tests": true,
     "ci": false,
     "gitignore": true,
-    "contributing": false
+    "contributing": false,
+    "manifest": true,
+    "security": false
   },
   "missing": [
     "ci",
-    "contributing"
+    "contributing",
+    "security"
   ]
 }
 ```
@@ -57,11 +68,15 @@ Example output:
 The current scoring model totals `100` points:
 
 - `README`: 20
-- `LICENSE`: 20
+- `LICENSE`: 15
 - `tests`: 20
 - `ci`: 20
 - `gitignore`: 10
 - `contributing`: 10
+- `manifest`: 5
+- `security`: 5
+
+Results can be printed as JSON, written to a file with `--output`, or consumed via the published schema from `--schema`.
 
 ## Development
 
